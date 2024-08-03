@@ -2,9 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
+body,
+html,
+#root {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    display: flex;
+    height: 100%;
+    overflow: hidden;
 }

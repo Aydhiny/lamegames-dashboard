@@ -84,7 +84,7 @@ function GuessNumbers() {
                 </div>
             )}
             <div className="bg-white p-8 rounded shadow-lg text-center">
-                <h1 className="text-3xl font-bold mb-4 text-gray-800">Guess the Number: JavaScript Game</h1>
+                <h1 className="text-3xl font-bold mb-4 text-gray-800">Guess the Number</h1>
                 <p className="text-lg text-gray-700 mb-6">
                     We have selected a random number between <br />
                     <span className="font-bold text-blue-500">
