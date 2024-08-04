@@ -63,29 +63,29 @@ function GuessNumbers() {
     }
 
     return (
-        <div className="relative flex flex-col items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 w-screen h-screen">
+        <div className="relative flex flex-col items-center justify-center bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 w-screen h-screen p-4">
             {showConfetti && (
                 <Confetti
                     style={{ opacity: confettiOpacity }}
                 />
             )}
             {showWinMessage && (
-                <div className="absolute top-0 left-0 w-full flex justify-center">
-                    <div className="bg-green-500 text-white py-2 px-4 rounded shadow-lg">
+                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-auto max-w-xs">
+                    <div className="bg-green-500 text-white py-2 px-4 rounded shadow-lg text-center">
                         You win!
                     </div>
                 </div>
             )}
             {showLoseMessage && (
-                <div className="absolute top-0 left-0 w-full flex justify-center">
-                    <div className="bg-red-500 text-white py-2 px-4 rounded shadow-lg">
+                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-auto max-w-xs">
+                    <div className="bg-red-500 text-white py-2 px-4 rounded shadow-lg text-center">
                         You lose!
                     </div>
                 </div>
             )}
-            <div className="bg-white p-8 rounded shadow-lg text-center">
-                <h1 className="text-3xl font-bold mb-4 text-gray-800">Guess the Number</h1>
-                <p className="text-lg text-gray-700 mb-6">
+            <div className="bg-white p-4 rounded shadow-lg w-full max-w-md text-center">
+                <h1 className="text-2xl md:text-3xl font-bold mb-4 text-gray-800">Guess the Number</h1>
+                <p className="text-base md:text-lg text-gray-700 mb-6">
                     We have selected a random number between <br />
                     <span className="font-bold text-blue-500">
                         {randNumber - 15}  {/* Adjust range here */}
@@ -96,7 +96,7 @@ function GuessNumbers() {
                     </span>.
                 </p>
                 {feedback && (
-                    <p className={`mt-4 text-lg font-bold ${feedback === 'Hotter' || feedback === 'Hot' ? 'text-orange-500' : 'text-blue-500'}`}>
+                    <p className={`mt-4 text-base md:text-lg font-bold ${feedback === 'Hotter' || feedback === 'Hot' ? 'text-orange-500' : 'text-blue-500'}`}>
                         {feedback}
                     </p>
                 )}
@@ -106,18 +106,18 @@ function GuessNumbers() {
                     placeholder="Guess the number..."
                     value={textField}
                     onChange={(e) => setTextField(e.target.value)}
-                    className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                    className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-base md:text-lg" 
                 />
                 <button 
                     onClick={checkNumber} 
-                    className="w-full py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-300"
+                    className="w-full py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-300 text-base md:text-lg"
                 >
                     Guess the number
                 </button>
             </div>
             <button 
                 onClick={() => navigate('/')} 
-                className="absolute bottom-4 left-4 bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-600 transition duration-300"
+                className="absolute bottom-4 left-4 bg-gray-700 text-white py-2 px-4 rounded hover:bg-gray-600 transition duration-300 text-base md:text-lg"
             >
                 &lt; Back
             </button>

@@ -1,22 +1,23 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import navigate hook
+import { useNavigate } from 'react-router-dom';
 
 const Pong = () => {
   const canvasRef = useRef(null);
-  const navigate = useNavigate(); // Use navigate hook for routing
+  const navigate = useNavigate();
   const [leftPaddleY, setLeftPaddleY] = useState(100);
   const [rightPaddleY, setRightPaddleY] = useState(100);
-  const [ball, setBall] = useState({ x: 200, y: 150, dx: 1, dy: 1 });
+  const [ball, setBall] = useState({ x: 0, y: 0, dx: 2, dy: 2 });
   const [leftScore, setLeftScore] = useState(0);
   const [rightScore, setRightScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [ballReset, setBallReset] = useState(false);
   const [hasScored, setHasScored] = useState(false);
 
-  const canvasWidth = 800;
-  const canvasHeight = 400;
-  const paddleWidth = 10;
-  const paddleHeight = 100;
+  const canvasWidth = window.innerWidth * 0.9; // 90% of the viewport width
+  const canvasHeight = window.innerHeight * 0.6; // 60% of the viewport height
+  const paddleWidth = canvasWidth * 0.02; // 2% of canvas width
+  const paddleHeight = canvasHeight * 0.2; // 20% of canvas height
+  const ballSize = canvasWidth * 0.03; // 3% of canvas width
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -73,16 +74,16 @@ const Pong = () => {
 
       // Draw ball
       ctx.beginPath();
-      ctx.arc(ball.x, ball.y, 10, 0, Math.PI * 2);
+      ctx.arc(ball.x, ball.y, ballSize / 2, 0, Math.PI * 2);
       ctx.fillStyle = '#ef4444'; // Tailwind color for red-500
       ctx.fill();
       ctx.closePath();
 
       // Draw scores
-      ctx.font = '24px Arial';
+      ctx.font = `${canvasWidth * 0.03}px Arial`; // Adjust font size relative to canvas width
       ctx.fillStyle = '#ffffff'; // White color
       ctx.textAlign = 'center';
-      ctx.fillText(`Left: ${leftScore} - Right: ${rightScore}`, canvasWidth / 2, 30);
+      ctx.fillText(`Left: ${leftScore} - Right: ${rightScore}`, canvasWidth / 2, canvasHeight * 0.1);
     };
 
     const gameLoop = () => {
@@ -106,7 +107,7 @@ const Pong = () => {
 
   useEffect(() => {
     if (ballReset) {
-      setBall({ x: canvasWidth / 2, y: canvasHeight / 2, dx: 1, dy: 1 });
+      setBall({ x: canvasWidth / 2, y: canvasHeight / 2, dx: 2, dy: 2 });
       setBallReset(false);
       if (leftScore >= 10 || rightScore >= 10) {
         setGameOver(true);
@@ -141,7 +142,7 @@ const Pong = () => {
     setLeftScore(0);
     setRightScore(0);
     setGameOver(false);
-    setBall({ x: canvasWidth / 2, y: canvasHeight / 2, dx: 1, dy: 1 });
+    setBall({ x: canvasWidth / 2, y: canvasHeight / 2, dx: 2, dy: 2 });
     setBallReset(false);
   };
 
@@ -155,7 +156,7 @@ const Pong = () => {
   };
 
   return (
-    <div className="relative flex justify-items-center items-center justify-center w-screen h-screen bg-gray-900">
+    <div className="relative flex justify-center items-center w-screen h-screen bg-gray-900 p-4">
       <canvas
         ref={canvasRef}
         width={canvasWidth}
@@ -164,7 +165,7 @@ const Pong = () => {
       />
       {gameOver && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white py-4 px-6 rounded shadow-lg text-center">
-          <h2 className="text-2xl font-bold mb-2">{getVictoryMessage()}</h2>
+          <h2 className="text-xl md:text-2xl font-bold mb-2">{getVictoryMessage()}</h2>
           <button
             onClick={startNewGame}
             className="mt-2 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-400 transition duration-300"
