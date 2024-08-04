@@ -11,6 +11,7 @@ const Pong = () => {
   const [rightScore, setRightScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [ballReset, setBallReset] = useState(false);
+  const [hasScored, setHasScored] = useState(false);
 
   const canvasWidth = 800;
   const canvasHeight = 400;
@@ -44,11 +45,19 @@ const Pong = () => {
 
       // Ball out of bounds
       if (newBall.x < 0) {
-        setBallReset(true);
-        setRightScore(score => score + 1);
+        if (!hasScored) { // Increment score only if not already scored
+          setRightScore(score => score + 1);
+          setHasScored(true);
+          setBallReset(true);
+        }
       } else if (newBall.x > canvasWidth) {
-        setBallReset(true);
-        setLeftScore(score => score + 1);
+        if (!hasScored) { // Increment score only if not already scored
+          setLeftScore(score => score + 1);
+          setHasScored(true);
+          setBallReset(true);
+        }
+      } else {
+        setHasScored(false); // Reset scored flag when ball is within bounds
       }
 
       setBall(newBall);
@@ -93,7 +102,7 @@ const Pong = () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [ball, leftPaddleY, rightPaddleY, leftScore, rightScore, gameOver]);
+  }, [ball, leftPaddleY, rightPaddleY, leftScore, rightScore, gameOver, hasScored]);
 
   useEffect(() => {
     if (ballReset) {
@@ -136,6 +145,15 @@ const Pong = () => {
     setBallReset(false);
   };
 
+  const getVictoryMessage = () => {
+    if (leftScore >= 10) {
+      return "Left Player Wins!";
+    } else if (rightScore >= 10) {
+      return "Right Player Wins!";
+    }
+    return "";
+  };
+
   return (
     <div className="relative flex justify-items-center items-center justify-center w-screen h-screen bg-gray-900">
       <canvas
@@ -145,8 +163,8 @@ const Pong = () => {
         className="border border-gray-600"
       />
       {gameOver && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white py-2 px-4 rounded shadow-lg">
-          <h2 className="text-xl">Game Over</h2>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white py-4 px-6 rounded shadow-lg text-center">
+          <h2 className="text-2xl font-bold mb-2">{getVictoryMessage()}</h2>
           <button
             onClick={startNewGame}
             className="mt-2 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-400 transition duration-300"
