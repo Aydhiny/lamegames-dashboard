@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import './App.css'; 
+import '../src/App.css'; 
 import { Suspense, lazy } from 'react';
 import LoadingScreen from './components/LoadingScreen'; 
+import WelcomeOverlay from './components/WelcomeOverlay';
+
+import { UserProvider } from './context/UserContext';
+import { useUser } from './context/UserContext';
+
 const GuessNumbers = lazy(() => import('./pages/guess-numbers'));
 const Pong = lazy(() => import('./pages/pong'));
 const Game = lazy(() => import('./pages/2048'));
-const Jumper = lazy(() => import('./pages/jumpers'));
+const JumpJack = lazy(() => import('./pages/jump-jack'));
+const SnappyDude = lazy(() => import('./pages/snappy-dude'));
+const Snake = lazy(() => import('./pages/snake'));
 const Login = lazy(() => import('./pages/auth/Login'));
 const Register = lazy(() => import('./pages/auth/Register'));
 
 function Home() {
-  const username = "Guest";
+  const [showOverlay, setShowOverlay] = useState(true);
+  const { user } = useUser();
+  const username = user ? user.username : "Guest";
   const games = [
     {
       id: 'guess-numbers',
@@ -35,9 +44,9 @@ function Home() {
       stars: 4,
     },
     {
-      id: 'jumper',
+      id: 'jump-jack',
       image: '/images/jumper.jpg',
-      title: 'Jumper',
+      title: 'Jump Jack',
       difficulty: 'Hard',
       stars: 5,
     },
@@ -49,11 +58,11 @@ function Home() {
       stars: 3,
     },
     {
-      id:'n-word',
-      image: '/images/random.webp',
-      title: 'N-Word',
-      difficulty: 'Insane',
-      stars: 0,
+      id:'snake',
+      image: '/images/snake.jpg',
+      title: 'Snake',
+      difficulty: 'Easy',
+      stars: 3,
     },
   ];
 
@@ -89,6 +98,7 @@ function Home() {
         <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-gray-800 text-center">
           Welcome to <span className='font-bold text-sky-100'>LameGames</span>
         </h1>
+        <h3 className='text-sm sm:text-sm font-extralight md:text-base m-3 text-gray-100 text-center'>We offer classic online games such as platformers, slot machines and much more!</h3>
         <div className="w-full max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-2 rounded-lg">
             {games.map(game => (
@@ -113,6 +123,7 @@ function Home() {
           </div>
         </div>
       </div>
+      {showOverlay && <WelcomeOverlay onClose={() => setShowOverlay(false)} />} {/* Conditionally render the overlay */}
     </div>
   );
 
@@ -120,20 +131,24 @@ function Home() {
 
 function App() {
   return (
-   <Router>
-      <Suspense fallback={<LoadingScreen />}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/guess-numbers" element={<GuessNumbers />} />
-          <Route path="/pong" element={<Pong />} />
-          <Route path="/2048" element={<Game />} />
-          <Route path="/jumpers" element={<Jumper />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          {/* Add routes for additional games here */}
-        </Routes>
-      </Suspense>
-    </Router>
+   <UserProvider>
+      <Router>
+        <Suspense fallback={<LoadingScreen />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/guess-numbers" element={<GuessNumbers />} />
+            <Route path="/pong" element={<Pong />} />
+            <Route path="/2048" element={<Game />} />
+            <Route path="/jump-jack" element={<JumpJack />} />
+            <Route path="/snappy-dude" element={<SnappyDude />} />
+            <Route path="/snake" element={<Snake />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            {/* Add routes for additional games here */}
+          </Routes>
+        </Suspense>
+      </Router>
+    </UserProvider>
   );
 }
 
